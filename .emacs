@@ -11,6 +11,15 @@
               "\\)"))
 
 
+(require 'package)
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")))
+
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -21,6 +30,7 @@
 (global-display-line-numbers-mode t)
 (tool-bar-mode -1)
 (window-divider-mode -1)
+
 
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
@@ -142,7 +152,7 @@
 (set-face-attribute 'default nil :height 120)
 (set-face-attribute 'mode-line nil
                     :foreground "white"
-                    :background "balck"
+                    :background "#2a2932"
                     :box nil)
 
 (set-face-attribute 'mode-line-inactive nil
@@ -158,8 +168,8 @@
 (add-to-list 'default-frame-alist '(background-color . "black"))
 (add-to-list 'default-frame-alist '(foreground-color . "white"))
 
-(set-frame-parameter (selected-frame) 'alpha '(90 .90))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'alpha '(100 . 100))
+;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
 (set-face-attribute 'default t :font "Liberation Mono-11.5")
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
@@ -172,5 +182,24 @@
 (set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
 
+
+(require 'company)
+(add-hook 'c-mode-hook 'company-mode)
+
+
+
+
 (message "Configuration was successful!")
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages '(lsp-mode helm company)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
