@@ -31,6 +31,7 @@
 (setq-default header-line-format nil)
 (setq-default fringe-mode 0)
 (setq-default internal-border-width 0)
+;; (setq-default visual-line-mode t)
 
 (setq scroll-step 1)
 (setq scroll-conservatively 10000)
@@ -80,6 +81,12 @@
 (global-unset-key (kbd "<C-wheel-down>"))
 (global-unset-key (kbd "<down>"))
 (global-unset-key (kbd "<up>"))
+(global-unset-key (kbd "C-n"))
+(global-unset-key (kbd "C-p"))
+(global-unset-key (kbd "C-f"))
+(global-unset-key (kbd "C-b"))
+(global-unset-key (kbd "C-l"))
+(global-unset-key (kbd "C-o"))
 
 
 (global-set-key (kbd "C-<up>") 'beginning-of-buffer)
