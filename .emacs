@@ -71,6 +71,20 @@
       (kill-region beg end))))
 
 
+(defun my-backward-kill-word (arg)
+  (interactive "p")
+  (let ((start (point)))
+    (backward-word arg)
+    (delete-region (point) start)))
+
+
+(defun my-delete-or-backward-delete ()
+  (interactive)
+  (if (use-region-p)
+      (delete-region (region-beginning) (region-end))
+    (backward-delete-char 1)))
+
+
 (global-unset-key (kbd "C-j"))
 (global-unset-key (kbd "C-k"))
 (global-unset-key (kbd "C-S-M-l"))
