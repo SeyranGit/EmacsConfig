@@ -30,6 +30,8 @@
 (global-display-line-numbers-mode t)
 (tool-bar-mode -1)
 (window-divider-mode -1)
+(electric-indent-mode -1)
+(global-subword-mode 1)
 
 
 (setq-default indent-tabs-mode nil)
@@ -41,7 +43,8 @@
 (setq-default header-line-format nil)
 (setq-default fringe-mode 0)
 (setq-default internal-border-width 0)
-;; (setq-default visual-line-mode t)
+(setq-default visual-line-mode t)
+
 
 (setq scroll-step 1)
 (setq scroll-conservatively 10000)
@@ -95,6 +98,38 @@
     (backward-delete-char 1)))
 
 
+(defun my-indent-region-left (start end)
+  (interactive "r")
+  (let ((deactivate-mark nil))
+    (indent-rigidly start end -2)))
+
+
+(defun custom-forward-word ()
+  (interactive)
+  (let ((pos (point)))
+    (while (and (not (eobp)) (looking-at "\\W"))
+      (forward-char))
+    (if (not (eobp)) 
+        (forward-word)
+      (goto-char pos))
+    (if (use-region-p)
+        (set-mark pos)
+      (deactivate-mark))))
+
+
+(defun custom-backward-word ()
+  (interactive)
+  (let ((pos (point)))
+    (while (and (not (bobp)) (looking-back "\\W" 1))
+      (backward-char))
+    (if (not (bobp)) 
+        (backward-word)
+      (goto-char pos))
+    (if (use-region-p)
+        (set-mark pos)
+      (deactivate-mark))))
+
+
 (global-unset-key (kbd "C-j"))
 (global-unset-key (kbd "C-k"))
 (global-unset-key (kbd "C-S-M-l"))
@@ -111,7 +146,11 @@
 (global-unset-key (kbd "C-b"))
 (global-unset-key (kbd "C-l"))
 (global-unset-key (kbd "C-o"))
+(global-unset-key (kbd "C-i"))
+(global-unset-key (kbd "M-u"))
 
+
+(global-set-key (kbd "C-s") 'save-buffer) 
 
 (global-set-key (kbd "C-<up>") 'beginning-of-buffer)
 (global-set-key (kbd "C-<down>") 'end-of-buffer)
@@ -128,8 +167,8 @@
 (global-set-key (kbd "C-z") 'undo)
 (global-set-key (kbd "C-S-z") 'undo-redo)
 
-(global-set-key (kbd "M-C-l") 'forward-word)
-(global-set-key (kbd "M-C-j") 'backward-word)
+(global-set-key (kbd "M-C-l") 'custom-forward-word)
+(global-set-key (kbd "M-C-j") 'custom-backward-word)
 
 (global-set-key (kbd "M-l") 'forward-char)
 (global-set-key (kbd "M-j") 'backward-char)
@@ -147,6 +186,12 @@
 (global-set-key (kbd "C-x C-x") 'my-kill-region-or-line)
 (global-set-key (kbd "C-/") 'toggle-comment-region)
 
+(global-set-key (kbd "C-f") 'isearch-forward)
+(global-set-key (kbd "S-<tab>") 'my-indent-region-left)
+
+(define-key isearch-mode-map (kbd "C-f") 'isearch-repeat-forward)
+
+
 
 ;; theme
 (set-face-attribute 'default nil :height 120)
@@ -158,9 +203,6 @@
 (set-face-attribute 'mode-line-inactive nil
                     :box nil)
 
-
-;; (set-face-foreground 'window-divider "dark gray")  ;; Цвет разделительной линии
-;; (set-face-background 'window-divider "black")
 (set-face-background 'region "#0f02c0")
 (set-background-color "black")
 (set-foreground-color "white")
@@ -169,7 +211,7 @@
 (add-to-list 'default-frame-alist '(foreground-color . "white"))
 
 (set-frame-parameter (selected-frame) 'alpha '(100 . 100))
-;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(add-to-list 'default-frame-alist '(alpha . (100 . 100)))
 
 (set-face-attribute 'default t :font "Liberation Mono-11.5")
 (set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
@@ -183,14 +225,17 @@
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
 
 
+;; packages
 (require 'company)
 (add-hook 'c-mode-hook 'company-mode)
 
+(use-package lsp-mode
+  :ensure t
+  :hook ((c-mode) . lsp-deferred)
+  :commands (lsp lsp-deferred))
 
 
-
-(message "Configuration was successful!")
-
+;; system code
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -203,3 +248,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+
+(message "Configuration was successful!")
+
